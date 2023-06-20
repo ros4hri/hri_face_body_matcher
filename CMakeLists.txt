@@ -19,6 +19,7 @@ find_package(catkin REQUIRED COMPONENTS
 )
 
 find_package(dlib REQUIRED)
+find_package(BLAS REQUIRED)
 
 ###################################
 ## catkin specific configuration ##
@@ -45,6 +46,7 @@ add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catk
 target_link_libraries(
   ${PROJECT_NAME}_node
   dlib::dlib
+  ${BLAS_LIBRARIES}
   ${catkin_LIBRARIES}
 )
 
