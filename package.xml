@@ -11,6 +11,8 @@
   <depend>hri</depend>
   <depend>hri_msgs</depend>
   <depend>libdlib-dev</depend>
+  <depend>libblas-dev</depend>
+  <depend>liblapack-dev</depend>
   <depend>message_filters</depend>
   <depend>roscpp</depend>
   <depend>sensor_msgs</depend>
