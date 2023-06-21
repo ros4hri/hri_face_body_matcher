@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.2 (2023-06-21)
+------------------
 * add missing blas dependency to package.xml
 * tweak CMakeLists to please the buildfarm debian generation
 * Contributors: Séverin Lemaignan
