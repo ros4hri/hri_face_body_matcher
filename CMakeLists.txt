@@ -35,7 +35,6 @@ catkin_package(
 ###########
 
 include_directories(
-  src
   SYSTEM
   ${OpenCV_INCLUDE_DIRS}
   ${catkin_INCLUDE_DIRS}
@@ -45,9 +44,9 @@ set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME match PREFIX "
 add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
 target_link_libraries(
   ${PROJECT_NAME}_node
+  ${catkin_LIBRARIES}
   dlib::dlib
   ${BLAS_LIBRARIES}
-  ${catkin_LIBRARIES}
 )
 
 #############
