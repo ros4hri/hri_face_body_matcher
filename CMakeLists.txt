@@ -68,7 +68,7 @@ install(DIRECTORY
 
 if(CATKIN_ENABLE_TESTING)
   find_package(rostest REQUIRED)
-  add_rostest(test/test_hri_face_body_matcher_default.launch)
+  add_rostest(test/hri_face_body_matcher_default.test)
   add_rostest(test/hri_face_body_matcher_high_confidence_scaling.test)
   add_rostest(test/hri_face_body_matcher_high_confidence_threshold.test)
 endif()

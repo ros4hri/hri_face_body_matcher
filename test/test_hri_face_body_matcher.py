@@ -4,7 +4,6 @@
 import argparse
 from dataclasses import dataclass
 from hri_msgs.msg import IdsList, IdsMatch, NormalizedPointOfInterest2D, Skeleton2D
-import functools
 from math import atan2, cos, sin, sqrt
 import rospy
 import rostest
@@ -14,7 +13,6 @@ from typing import Dict, List, Tuple
 import unittest
 
 PKG = "hri_face_body_matcher"
-TESTED_NODE = "hri_face_body_matcher"
 
 IMAGE_WIDTH = 1920
 IMAGE_HEIGHT = 1080

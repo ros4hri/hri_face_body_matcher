@@ -1,0 +1,4 @@
+<launch>
+    <include file="$(find hri_face_body_matcher)/launch/hri_face_body_matcher.launch"/>
+    <test test-name="default" pkg="hri_face_body_matcher" type="test_hri_face_body_matcher.py" args="--test_case default"/>
+</launch>
