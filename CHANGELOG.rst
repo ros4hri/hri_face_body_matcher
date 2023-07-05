@@ -2,6 +2,13 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* change RoI message type to hri_msgs/NormalizedRegionOfInterest2D
+* fix tests reliability
+* align test file structure
+* Contributors: Luka Juricic
+
 0.1.2 (2023-06-21)
 ------------------
 * add missing blas dependency to package.xml
