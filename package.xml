@@ -15,7 +15,6 @@
   <depend>liblapack-dev</depend>
   <depend>message_filters</depend>
   <depend>roscpp</depend>
-  <depend>sensor_msgs</depend>
   <test_depend>rosunit</test_depend>
 
   <!-- The export tag contains other, unspecified, tags -->

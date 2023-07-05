@@ -30,7 +30,6 @@ private:
   hri::HRIListener hri_listener_{};
   ros::Timer match_timer_{};
   ros::Publisher match_pub_{};
-  ros::Subscriber camera_info_sub_{};
   std::map<hri::ID, hri::BodyWeakConstPtr> bodies_{};
   std::map<hri::ID, hri::FaceWeakConstPtr> faces_{};
   std::vector<hri::ID> body_ids_{};
@@ -38,8 +37,6 @@ private:
   double confidence_threshold_{};       // lower confidence matches are not published
   double confidence_scaling_factor_{};  // face to body face distance, relative to face diagonal,
                                         // correspondent to 0.5 confidence
-  int source_image_height_{};
-  int source_image_width_{};
 };
 
 #endif  // FACE_BODY_MATCHER_H

@@ -50,13 +50,6 @@ The required ROS4HRI topics used by the package are:
 - `/humans/faces/tracked`
 - `/humans/faces/<face_id>/roi`
 
-The topics directly subscribed by the node are:
-
-- `/camera_info`
-  [CameraInfo](http://docs.ros.org/en/api/sensor_msgs/html/msg/CameraInfo.html):
-  camera info associated with the source images used to recognize the faces and
-  the bodies.
-
 #### Published topics
 
 - `/humans/candidate_matches`

@@ -17,7 +17,6 @@
 #include <hri_msgs/Skeleton2D.h>
 #include <opencv2/core.hpp>
 #include <ros/ros.h>
-#include <sensor_msgs/CameraInfo.h>
 
 #include <cmath>
 #include <functional>
@@ -33,12 +32,6 @@ FaceBodyMatcher::FaceBodyMatcher()
 
   match_timer_ = node_handle_.createTimer(ros::Duration(0.1), std::bind(&FaceBodyMatcher::match, this));
   match_pub_ = node_handle_.advertise<hri_msgs::IdsMatch>("/humans/candidate_matches", 10, false);
-
-  camera_info_sub_ = node_handle_.subscribe<sensor_msgs::CameraInfo>("/camera_info", 1,
-                                                                     [&](const sensor_msgs::CameraInfoConstPtr& msg) {
-                                                                       source_image_height_ = msg->height;
-                                                                       source_image_width_ = msg->width;
-                                                                     });
 }
 
 void FaceBodyMatcher::match()
@@ -93,14 +86,16 @@ int FaceBodyMatcher::matching_confidence(hri::BodyWeakConstPtr body, hri::FaceWe
   int confidence{};
   auto body_skeleton{ body.lock()->skeleton() };
   auto face_roi{ face.lock()->roi() };
-  if (!body_skeleton.empty() && !face_roi.empty())
+  if (!body_skeleton.empty() && (face_roi != NormROI()))
   {
     auto body_nose{ body_skeleton[hri_msgs::Skeleton2D::NOSE] };
-    cv::Point2f body_nose_point{ body_nose.x * source_image_width_, body_nose.y * source_image_height_ };
-    cv::Point2f face_center_point{ (face_roi.br() + face_roi.tl()) / 2. };
+    cv::Point2f body_nose_point{ body_nose.x, body_nose.y };
+    cv::Point2f face_top_left_point{ face_roi.xmin, face_roi.ymin };
+    cv::Point2f face_bot_right_point{ face_roi.xmax, face_roi.ymax };
+    cv::Point2f face_center_point{ (face_top_left_point + face_bot_right_point) / 2. };
 
     auto distance{ cv::norm(body_nose_point - face_center_point) };
-    auto half_confidence_distance{ cv::norm(face_roi.br() - face_roi.tl()) / confidence_scaling_factor_ };
+    auto half_confidence_distance{ cv::norm(face_bot_right_point - face_top_left_point) / confidence_scaling_factor_ };
 
     confidence = static_cast<int>(std::max(0., 100. - (50. * distance / half_confidence_distance)));
   }

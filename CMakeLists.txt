@@ -15,7 +15,6 @@ find_package(catkin REQUIRED COMPONENTS
   hri
   hri_msgs
   roscpp
-  sensor_msgs
 )
 
 find_package(dlib REQUIRED)
@@ -26,7 +25,7 @@ find_package(BLAS REQUIRED)
 ###################################
 
 catkin_package(
-  CATKIN_DEPENDS hri hri_msgs roscpp sensor_msgs
+  CATKIN_DEPENDS hri hri_msgs roscpp
   DEPENDS dlib
 ) 
 

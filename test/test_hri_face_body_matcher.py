@@ -3,19 +3,16 @@
 
 import argparse
 from dataclasses import dataclass
-from hri_msgs.msg import IdsList, IdsMatch, NormalizedPointOfInterest2D, Skeleton2D
+from hri_msgs.msg import IdsList, IdsMatch, NormalizedPointOfInterest2D, NormalizedRegionOfInterest2D, Skeleton2D
 from math import atan2, cos, sin, sqrt
 import rospy
 import rostest
-from sensor_msgs.msg import CameraInfo, RegionOfInterest
 import sys
 from typing import Dict, List, Tuple
 import unittest
 
 PKG = "hri_face_body_matcher"
 
-IMAGE_WIDTH = 1920
-IMAGE_HEIGHT = 1080
 MAX_N_PEOPLE = 2
 NODE_CYCLE_SEC = 0.1
 TEST_TIMEOUT_SEC = 5
@@ -55,9 +52,6 @@ class TestData:
 class GenericTestSequence(unittest.TestCase):
     def setUp(self):
         self.match_msgs = []
-        self.camera_info_pub = rospy.Publisher(
-            "/camera_info", CameraInfo, queue_size=1, latch=True
-        )
         self.bodies_tracked_pub = rospy.Publisher(
             "/humans/bodies/tracked", IdsList, queue_size=1, latch=True
         )
@@ -75,7 +69,7 @@ class GenericTestSequence(unittest.TestCase):
             )
             self.face_roi_pub[id] = rospy.Publisher(
                 "/humans/faces/face%s/roi" % id,
-                RegionOfInterest,
+                NormalizedRegionOfInterest2D,
                 queue_size=1,
                 latch=True,
             )
@@ -93,15 +87,13 @@ class GenericTestSequence(unittest.TestCase):
                 "Timeout in waiting for node under test subscribe to topics",
             )
             if (
-                self.camera_info_pub.get_num_connections()
-                and self.bodies_tracked_pub.get_num_connections()
+                self.bodies_tracked_pub.get_num_connections()
                 and self.faces_tracked_pub.get_num_connections()
                 and self.matches_sub.get_num_connections()
             ):
                 break
             rospy.sleep(TEST_MICRO_WAIT_SEC)
 
-        self.camera_info_pub.publish(CameraInfo(height=IMAGE_HEIGHT, width=IMAGE_WIDTH))
         self.bodies_tracked_pub.publish(IdsList())
         self.faces_tracked_pub.publish(IdsList())
 
@@ -153,7 +145,6 @@ class GenericTestSequence(unittest.TestCase):
                 break
             rospy.sleep(TEST_MICRO_WAIT_SEC)
 
-        self.camera_info_pub = None
         self.bodies_tracked_pub = None
         self.faces_tracked_pub = None
         self.body_skeleton_pub = None
@@ -173,43 +164,43 @@ class GenericTestSequence(unittest.TestCase):
 
         for id, person in enumerate(people):
             if person.has_face:
-                face_center_x = person.face_center_rel[0] * IMAGE_WIDTH
-                face_center_y = person.face_center_rel[1] * IMAGE_HEIGHT
-                face_height = int(person.face_size_rel * IMAGE_HEIGHT)
-                face_width = int(face_height / face_ratio)
-                face_min_x = int(face_center_x - (face_width / 2))
-                face_max_x = int(face_center_x + (face_width / 2))
-                face_min_y = int(face_center_y - (face_height / 2))
-                face_max_y = int(face_center_y + (face_height / 2))
+                face_center_x = person.face_center_rel[0]
+                face_center_y = person.face_center_rel[1]
+                face_height = person.face_size_rel
+                face_width = face_height / face_ratio
+                face_min_x = face_center_x - (face_width / 2)
+                face_max_x = face_center_x + (face_width / 2)
+                face_min_y = face_center_y - (face_height / 2)
+                face_max_y = face_center_y + (face_height / 2)
                 self.assertGreaterEqual(
-                    face_min_x, 0, "Computed face RoI is out of bounds"
+                    face_min_x, 0., "Computed face RoI is out of bounds"
                 )
                 self.assertGreaterEqual(
-                    face_min_y, 0, "Computed face RoI is out of bounds"
+                    face_min_y, 0., "Computed face RoI is out of bounds"
                 )
                 self.assertLessEqual(
-                    face_max_x, IMAGE_WIDTH, "Computed face RoI is out of bounds"
+                    face_max_x, 1., "Computed face RoI is out of bounds"
                 )
                 self.assertLessEqual(
-                    face_max_y, IMAGE_HEIGHT, "Computed face RoI is out of bounds"
+                    face_max_y, 1., "Computed face RoI is out of bounds"
                 )
 
                 faces_tracked_msg.ids.append(f"face{id}")
-                face_roi_msgs[id] = RegionOfInterest(
-                    x_offset=face_min_x,
-                    y_offset=face_min_y,
-                    height=face_height,
-                    width=face_width,
+                face_roi_msgs[id] = NormalizedRegionOfInterest2D(
+                    xmin=face_min_x,
+                    ymin=face_min_y,
+                    xmax=face_max_x,
+                    ymax=face_max_y
                 )
                 rospy.logdebug(
-                    f"Publish face{id} with RoI x_offset={face_min_x}, y_offset={face_min_y}, height={face_height}, width={face_width}"
+                    f"Publish face{id} with RoI xmin={face_min_x}, ymin={face_min_y}, xmax={face_max_x}, ymax={face_max_y}"
                 )
 
             if person.has_body:
                 if person.has_face:
                     # shift the node position from the image center always towards the image center
-                    image_center_x = IMAGE_WIDTH / 2
-                    image_center_y = IMAGE_HEIGHT / 2
+                    image_center_x = 0.5
+                    image_center_y = 0.5
                     face_to_image_center_angle = atan2(
                         (image_center_y - face_center_y),
                         (image_center_x - face_center_x),
@@ -227,33 +218,31 @@ class GenericTestSequence(unittest.TestCase):
                         * face_diag_length
                         * person.discrepancy
                     )
-                    nose_x_rel = nose_x / IMAGE_WIDTH
-                    nose_y_rel = nose_y / IMAGE_HEIGHT
                 else:
-                    nose_x_rel = person.face_center_rel[0]
-                    nose_y_rel = person.face_center_rel[1]
+                    nose_x = person.face_center_rel[0]
+                    nose_y = person.face_center_rel[1]
                 self.assertGreaterEqual(
-                    nose_x_rel, 0.0, "Computed body nose position is out of bounds"
+                    nose_x, 0.0, "Computed body nose position is out of bounds"
                 )
                 self.assertLessEqual(
-                    nose_x_rel, 1.0, "Computed body nose position is out of bounds"
+                    nose_x, 1.0, "Computed body nose position is out of bounds"
                 )
                 self.assertGreaterEqual(
-                    nose_y_rel, 0.0, "Computed body nose position is out of bounds"
+                    nose_y, 0.0, "Computed body nose position is out of bounds"
                 )
                 self.assertLessEqual(
-                    nose_y_rel, 1.0, "Computed body nose position is out of bounds"
+                    nose_y, 1.0, "Computed body nose position is out of bounds"
                 )
 
                 bodies_tracked_msg.ids.append(f"body{id}")
                 body_skeleton = Skeleton2D()
                 body_skeleton.skeleton.insert(
                     Skeleton2D.NOSE,
-                    NormalizedPointOfInterest2D(x=nose_x_rel, y=nose_y_rel),
+                    NormalizedPointOfInterest2D(x=nose_x, y=nose_y),
                 )
                 body_skeleton_msgs[id] = body_skeleton
                 rospy.logdebug(
-                    f"Publish body{id} with nose relative position x={nose_x_rel}, y={nose_y_rel}"
+                    f"Publish body{id} with nose relative position x={nose_x}, y={nose_y}"
                 )
 
             if person.test_matching:
