@@ -24,13 +24,13 @@ TEST_MICRO_WAIT_SEC = 1e-3
 POSITION_CENTER = (0.5, 0.5)
 POSITION_FAR_LEFT = (0.25, 0.5)
 POSITION_FAR_RIGHT = (0.75, 0.5)
-POSITION_CLOSE_LEFT = (0.4, 0.5)
-POSITION_CLOSE_RIGHT = (0.6, 0.5)
+POSITION_CLOSE_LEFT = (0.35, 0.5)
+POSITION_CLOSE_RIGHT = (0.65, 0.5)
 SIZE_STANDARD = 0.3
 SIZE_SMALL = 0.1
 SIZE_BIG = 0.9
 DISCREPANCY_STANDARD = 0.3
-DISCREPANCY_NO_MATCH = 1.0
+DISCREPANCY_NO_MATCH = 0.8
 
 
 @dataclass(frozen=True)
@@ -159,6 +159,8 @@ class GenericTestSequence(unittest.TestCase):
         self.body_skeleton_pub = None
         self.face_roi_pub = None
         self.matches_sub = None
+
+        rospy.sleep(2 * NODE_CYCLE_SEC)
 
     def _test(self, name, people: List[Person]):
         rospy.logdebug(f"Running test_{name}")
