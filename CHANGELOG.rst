@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+0.1.5 (2023-07-06)
+------------------
 * use development sqlite3 dependency
 * Contributors: Luka Juricic
 
