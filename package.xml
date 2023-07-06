@@ -11,9 +11,11 @@
   <depend>hri</depend>
   <depend>hri_msgs</depend>
   <depend>libdlib-dev</depend>
+  <!-- packages required by dlib -->
   <depend>libblas-dev</depend>
   <depend>liblapack-dev</depend>
-  <depend>sqlite3</depend>  <!-- required by dlib -->
+  <depend>libsqlite3-dev</depend>
+  <!-- end of packages required by dlib -->
   <depend>message_filters</depend>
   <depend>roscpp</depend>
   <test_depend>rosunit</test_depend>
