@@ -2,6 +2,11 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+------------------
+* add sqlite3 dependency
+* Contributors: Luka Juricic
+
 0.1.3 (2023-07-05)
 ------------------
 * change RoI message type to hri_msgs/NormalizedRegionOfInterest2D
