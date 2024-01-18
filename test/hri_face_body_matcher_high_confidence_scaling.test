@@ -1,6 +1,0 @@
-<launch>
-    <include file="$(find hri_face_body_matcher)/launch/hri_face_body_matcher.launch">
-        <arg name="confidence_scaling_factor" value="5." />
-    </include>
-    <test test-name="high_confidence_scaling" pkg="hri_face_body_matcher" type="test_hri_face_body_matcher.py" args="--test_case high_confidence_scaling"/>
-</launch>

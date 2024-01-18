@@ -47,6 +47,10 @@ if(BUILD_TESTING)
   ament_auto_find_test_dependencies()
   ament_lint_auto_find_test_dependencies()
 
+  # TODO(LJU): replace with ament_auto_add_gmock() when available
+  ament_add_gmock(${PROJECT_NAME}_test test/test_node_face_body_matcher.cpp)
+  target_include_directories(${PROJECT_NAME}_test PUBLIC ${CMAKE_CURRENT_SOURCE_DIR}/include)
+  target_link_libraries(${PROJECT_NAME}_test ${PROJECT_NAME}_lib)
 endif()
 
 ament_auto_package()
