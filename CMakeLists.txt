@@ -1,73 +1,52 @@
-# Copyright 2023 PAL Robotics S.L.
-# All Rights Reserved.
+# Copyright (c) 2023 PAL Robotics S.L. All rights reserved.
 #
 # Unauthorized copying of this file, via any medium is strictly prohibited,
 # unless it was supplied under the terms of a license agreement or
 # nondisclosure agreement with PAL Robotics SL. In this case it may not be
 # copied or disclosed except in accordance with the terms of that agreement.
 
-cmake_minimum_required(VERSION 3.1.0)
+cmake_minimum_required(VERSION 3.8)
 project(hri_face_body_matcher)
 
-set (CMAKE_CXX_STANDARD 14)
+# Global flags
+if(NOT CMAKE_CXX_STANDARD)
+  set(CMAKE_CXX_STANDARD 17)
+  set(CMAKE_CXX_STANDARD_REQUIRED ON)
+endif()
+if(CMAKE_COMPILER_IS_GNUCXX OR CMAKE_CXX_COMPILER_ID MATCHES "Clang")
+  add_compile_options(-Wall -Wextra -Wpedantic)
+endif()
 
-find_package(catkin REQUIRED COMPONENTS
-  hri
-  hri_msgs
-  roscpp
-)
-
+# Dependencies
+find_package(ament_cmake_auto REQUIRED)
+ament_auto_find_build_dependencies()
 find_package(dlib REQUIRED)
 find_package(BLAS REQUIRED)
 
-###################################
-## catkin specific configuration ##
-###################################
-
-catkin_package(
-  CATKIN_DEPENDS hri hri_msgs roscpp
-  DEPENDS dlib
-) 
-
-###########
-## Build ##
-###########
-
-include_directories(
-  SYSTEM
-  ${OpenCV_INCLUDE_DIRS}
-  ${catkin_INCLUDE_DIRS}
+# Targets
+ament_auto_add_library(${PROJECT_NAME}_lib
+  src/hri_face_body_matcher/node_face_body_matcher.cpp
 )
-add_executable(${PROJECT_NAME}_node src/match.cpp src/face_body_matcher.cpp)
-set_target_properties(${PROJECT_NAME}_node PROPERTIES OUTPUT_NAME match PREFIX "")
-add_dependencies(${PROJECT_NAME}_node ${${PROJECT_NAME}_EXPORTED_TARGETS} ${catkin_EXPORTED_TARGETS})
-target_link_libraries(
-  ${PROJECT_NAME}_node
-  ${catkin_LIBRARIES}
+target_link_libraries(${PROJECT_NAME}_lib
   dlib::dlib
   ${BLAS_LIBRARIES}
 )
 
-#############
-## Install ##
-#############
-
-install(TARGETS ${PROJECT_NAME}_node
-  RUNTIME DESTINATION ${CATKIN_PACKAGE_BIN_DESTINATION}
+ament_auto_add_executable(${PROJECT_NAME}
+  src/main.cpp
 )
 
-install(DIRECTORY
-  launch
-  DESTINATION ${CATKIN_PACKAGE_SHARE_DESTINATION}
+# Additional install
+install(
+  DIRECTORY launch
+  DESTINATION share/${PROJECT_NAME}
 )
 
-##########
-## Test ##
-##########
+# Testing
+if(BUILD_TESTING)
+  ament_auto_find_test_dependencies()
+  ament_lint_auto_find_test_dependencies()
 
-if(CATKIN_ENABLE_TESTING)
-  find_package(rostest REQUIRED)
-  add_rostest(test/hri_face_body_matcher_default.test)
-  add_rostest(test/hri_face_body_matcher_high_confidence_scaling.test)
-  add_rostest(test/hri_face_body_matcher_high_confidence_threshold.test)
 endif()
+
+ament_auto_package()

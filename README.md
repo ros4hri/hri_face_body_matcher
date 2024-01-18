@@ -1,8 +1,6 @@
-hri_face_body_matcher
-=====================
+# hri_face_body_matcher
 
-Overview
---------
+## Overview
 
 `hri_face_body_matcher` is a [ROS4HRI](https://wiki.ros.org/hri)-compatible face
 to body matcher node.
@@ -21,44 +19,36 @@ The rate the confidence drops is proportional to the
 diagonal length.  $$confidence = max(0, 1 - \frac{distance * c.s.f.}{2 * face\
 size})$$
 
-ROS API
--------
+## ROS API
 
 ### Parameters
 
-- `~confidence_threshold` (double ∈ [0,1], default: 0.5): candidate matches with
-  confidence lower that this threshold are not published.
+All parameters are loaded in the lifecycle `configuration` transition.
 
-- `~confidence_scaling_factor` (double > 0, default: 2): factor scaling how
-  quickly the estimated confidence drops as the distance between the matched
-  face and body increases.
+- `~confidence_threshold` (default: 0.5):
+  Candidate matches with confidence lower that this threshold are not published.
+
+- `~confidence_scaling_factor` (default: 2.0):
+  Factor scaling how quickly the estimated confidence drops as the distance between the matched face and body increases.
 
 ### Topics
 
-`hri_face_body_matcher` follows the ROS4HRI conventions
-([REP-155](https://www.ros.org/reps/rep-0155.html)).
+This package follows the ROS4HRI conventions ([REP-155](https://www.ros.org/reps/rep-0155.html)).
+If the topic message type is not indicated, the ROS4HRI convention is implied.
 
-#### Subscribed topics
-
-The node uses [libhri](https://gitlab/ros4hri/libhri) to indirectly subscribe to
-all ROS4HRI topics.
-
-The required ROS4HRI topics used by the package are:
+#### Subscribed
 
 - `/humans/bodies/tracked`
 - `/humans/bodies/<body_id>/skeleton2d`
 - `/humans/faces/tracked`
 - `/humans/faces/<face_id>/roi`
 
-#### Published topics
+#### Published
 
 - `/humans/candidate_matches`
-  ([hri_msgs/IdsMatch](http://docs.ros.org/en/api/hri_msgs/html/msg/IdsMatch.html)):
-  correspondences between face IDs and body IDs (alongside with a confidence
-  level).
 
 ### Execution
 
 ```bash
-roslaunch hri_face_body_matcher hri_face_body_matcher.launch
+ros2 launch hri_face_body_matcher hri_face_body_matcher.launch
 ```

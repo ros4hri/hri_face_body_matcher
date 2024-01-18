@@ -1,9 +1,24 @@
 #!/usr/bin/env python3
 # -*- coding: utf-8 -*-
 
+# Copyright (c) 2023 PAL Robotics S.L. All rights reserved.
+#
+# Licensed under the Apache License, Version 2.0 (the "License");
+# you may not use this file except in compliance with the License.
+# You may obtain a copy of the License at
+#
+#     http://www.apache.org/licenses/LICENSE-2.0
+#
+# Unless required by applicable law or agreed to in writing, software
+# distributed under the License is distributed on an "AS IS" BASIS,
+# WITHOUT WARRANTIES OR CONDITIONS OF ANY KIND, either express or implied.
+# See the License for the specific language governing permissions and
+# limitations under the License.
+
 import argparse
 from dataclasses import dataclass
-from hri_msgs.msg import IdsList, IdsMatch, NormalizedPointOfInterest2D, NormalizedRegionOfInterest2D, Skeleton2D
+from hri_msgs.msg import (
+    IdsList, IdsMatch, NormalizedPointOfInterest2D, NormalizedRegionOfInterest2D, Skeleton2D)
 from math import atan2, cos, sin, sqrt
 import rospy
 import rostest
@@ -37,10 +52,11 @@ class Person:
         float, float
     ] = POSITION_CENTER  # (x,y) relative position of the person face center in the image
     face_size_rel: float = SIZE_STANDARD  # length of the face height relative to the image height
-    discrepancy: float = DISCREPANCY_STANDARD  # distance between the body nose and the face center, relative to the face diagonal length
+    # distance between body nose and face center, relative to the face diagonal length
+    discrepancy: float = DISCREPANCY_STANDARD
     has_face: bool = True
     has_body: bool = True
-    test_matching: bool = True  # if the test is expected to find a match between the person head and body
+    test_matching: bool = True  # if a match is expected between the person head and body
 
 
 @dataclass(frozen=True)
@@ -193,7 +209,8 @@ class GenericTestSequence(unittest.TestCase):
                     ymax=face_max_y
                 )
                 rospy.logdebug(
-                    f"Publish face{id} with RoI xmin={face_min_x}, ymin={face_min_y}, xmax={face_max_x}, ymax={face_max_y}"
+                    f"Publish face{id} with RoI xmin={face_min_x}, ymin={face_min_y}, "
+                    f"xmax={face_max_x}, ymax={face_max_y}"
                 )
 
             if person.has_body:
