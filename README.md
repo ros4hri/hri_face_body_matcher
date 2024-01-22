@@ -16,8 +16,11 @@ and the face center in the image.
 
 The rate the confidence drops is proportional to the
 `~confidence_scaling_factor` parameter and the face size, intended as its
-diagonal length.  $$confidence = max(0, 1 - \frac{distance * c.s.f.}{2 * face\
-size})$$
+diagonal length.
+```math
+confidence = max(0, 1 - \frac{distance * c.s.f.}{2 * face\ size})
+```
+
 
 ## ROS API
 
@@ -25,10 +28,10 @@ size})$$
 
 All parameters are loaded in the lifecycle `configuration` transition.
 
-- `~confidence_threshold` (default: 0.5):
+- `~confidence_threshold` (double ∈ [0,1], default: 0.5):
   Candidate matches with confidence lower that this threshold are not published.
 
-- `~confidence_scaling_factor` (default: 2.0):
+- `~confidence_scaling_factor` (double > 0, default: 2.0):
   Factor scaling how quickly the estimated confidence drops as the distance between the matched face and body increases.
 
 ### Topics
@@ -50,5 +53,5 @@ If the topic message type is not indicated, the ROS4HRI convention is implied.
 ### Execution
 
 ```bash
-ros2 launch hri_face_body_matcher hri_face_body_matcher.launch
+ros2 launch hri_face_body_matcher hri_face_body_matcher.launch.py
 ```
