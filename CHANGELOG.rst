@@ -2,6 +2,14 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add example in README
+* bump copyright year; increase version; fix README
+* port test to ros 2 humble
+* port node and launch file to ros 2 humble
+* Contributors: Luka Juricic
+
 0.1.5 (2023-07-06)
 ------------------
 * use development sqlite3 dependency
