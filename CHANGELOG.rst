@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.0 (2024-02-14)
+------------------
 * add example in README
 * bump copyright year; increase version; fix README
 * port test to ros 2 humble
