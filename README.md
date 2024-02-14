@@ -50,8 +50,37 @@ If the topic message type is not indicated, the ROS4HRI convention is implied.
 
 - `/humans/candidate_matches`
 
-### Execution
+## Execution
 
 ```bash
 ros2 launch hri_face_body_matcher hri_face_body_matcher.launch.py
 ```
+
+## Example
+
+For an example of usage, execute in different terminals:
+- USB camera:
+  1. `apt install ros-humble-usb-cam`
+  2. `ros2 run usb_cam usb_cam_node_exe`
+- HRI face detect:
+  1. Either
+    - if you are on a PAL robot `apt install ros-humble-hri-face-detect`
+    - otherwise build and install from [source](https://github.com/ros4hri/hri_face_detect).
+  2. `ros2 launch hri_face_detect face_detect.launch.py`
+- HRI fullbody:
+  1. Either
+    - if you are on a PAL robot `apt install ros-humble-hri-fullbody`
+    - otherwise build and install from [source](https://github.com/ros4hri/hri_face_fullbody).
+  2. `ros2 launch hri_fachri_fullbody hri_fullbody.launch.py`
+- HRI face body matcher:
+  1. `apt install ros-humble-hri-face-body-matcher`
+  2. `ros2 launch hri_face_body_matcher hri_face_body_matcher.launch.py`
+- RViz with HRI plugin:
+  1. `apt install ros-humble-rviz2`
+  2. Either
+    - if you are on a PAL robot `apt install ros-humble-hri-rviz`
+    - otherwise build and install from [source](https://github.com/ros4hri/hri_rviz).
+  3. `rviz2`
+
+In RViz, add the 'Humans' plugin to see the detected faces.
+The face IDs should be permanently assigned to the same people.
