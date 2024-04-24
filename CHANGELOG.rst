@@ -2,6 +2,11 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* add pal module
+* Contributors: Luka Juricic
+
 2.0.0 (2024-02-14)
 ------------------
 * add example in README
