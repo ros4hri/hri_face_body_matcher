@@ -42,6 +42,12 @@ install(
   DESTINATION share/${PROJECT_NAME}
 )
 
+if(pal_module_cmake_FOUND)
+  pal_register_modules(
+    module/hri_face_body_matcher_module.yaml
+  )
+endif()
+
 # Testing
 if(BUILD_TESTING)
   ament_auto_find_test_dependencies()
