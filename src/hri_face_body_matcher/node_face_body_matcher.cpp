@@ -20,6 +20,9 @@
 #include "hri/types.hpp"
 #include "hri_msgs/msg/ids_match.hpp"
 #include "hri_msgs/msg/skeleton2_d.hpp"
+#include <diagnostic_msgs/msg/diagnostic_array.hpp>
+#include <diagnostic_msgs/msg/diagnostic_status.hpp>
+#include <diagnostic_updater/diagnostic_status_wrapper.hpp>
 #include "lifecycle_msgs/msg/state.hpp"
 #include "opencv2/core.hpp"
 #include "rclcpp/rclcpp.hpp"
@@ -43,8 +46,17 @@ NodeFaceBodyMatcher::NodeFaceBodyMatcher(const rclcpp::NodeOptions & options)
 
 LifecycleCallbackReturn NodeFaceBodyMatcher::on_configure(const rclcpp_lifecycle::State &)
 {
+  using namespace std::chrono_literals;
+
   confidence_threshold_ = this->get_parameter("confidence_threshold").as_double();
   confidence_scaling_factor_ = this->get_parameter("confidence_scaling_factor").as_double();
+
+  diagnostics_pub_ =
+    this->create_publisher<diagnostic_msgs::msg::DiagnosticArray>(
+    "/diagnostics", 1);
+  diagnostics_timer_ = rclcpp::create_timer(
+    this, this->get_clock(), 1s,
+    std::bind(&NodeFaceBodyMatcher::publishDiagnostics, this));
 
   RCLCPP_INFO(this->get_logger(), "State: Inactive");
   return LifecycleCallbackReturn::SUCCESS;
@@ -97,7 +109,10 @@ void NodeFaceBodyMatcher::internal_deactivate()
 }
 
 void NodeFaceBodyMatcher::internal_cleanup()
-{}
+{
+  diagnostics_timer_.reset();
+  diagnostics_pub_.reset();
+}
 
 void NodeFaceBodyMatcher::match()
 {
@@ -184,6 +199,19 @@ void NodeFaceBodyMatcher::publishMatch(hri::ID body_id, hri::ID face_id, double 
   match_msg.id2_type = match_msg.FACE;
   match_msg.confidence = confidence;
   match_pub_->publish(match_msg);
+}
+
+void NodeFaceBodyMatcher::publishDiagnostics()
+{
+  diagnostic_updater::DiagnosticStatusWrapper status;
+  status.name = "/social_perception/fusion/hri_face_body_matcher";
+  status.summary(diagnostic_msgs::msg::DiagnosticStatus::OK, "");
+  status.add("Current lifecycle state", this->get_current_state().label());
+
+  diagnostic_msgs::msg::DiagnosticArray msg;
+  msg.header.stamp = this->get_clock()->now();
+  msg.status.push_back(status);
+  diagnostics_pub_->publish(msg);
 }
 
 }  // namespace hri_face_body_matcher

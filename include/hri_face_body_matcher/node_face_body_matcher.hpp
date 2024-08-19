@@ -15,8 +15,10 @@
 #include "hri/hri.hpp"
 #include "hri/types.hpp"
 #include "hri_msgs/msg/ids_match.hpp"
-#include "rclcpp/rclcpp.hpp"
-#include "rclcpp_lifecycle/lifecycle_node.hpp"
+
+#include <diagnostic_msgs/msg/diagnostic_array.hpp>
+#include <rclcpp/rclcpp.hpp>
+#include <rclcpp_lifecycle/lifecycle_node.hpp>
 
 namespace hri_face_body_matcher
 {
@@ -41,6 +43,7 @@ private:
   void match();
   int matchingConfidence(hri::BodyPtr body, hri::FacePtr face);
   void publishMatch(hri::ID body_id, hri::ID face_id, double confidence);
+  void publishDiagnostics();
 
   std::shared_ptr<hri::HRIListener> hri_listener_;
   std::shared_ptr<rclcpp::TimerBase> match_timer_;
@@ -48,6 +51,8 @@ private:
   double confidence_threshold_;       // lower confidence matches are not published
   double confidence_scaling_factor_;  // face to body face distance, relative to face diagonal,
                                       // correspondent to 0.5 confidence
+  rclcpp::Publisher<diagnostic_msgs::msg::DiagnosticArray>::SharedPtr diagnostics_pub_;
+  std::shared_ptr<rclcpp::TimerBase> diagnostics_timer_;
 };
 
 }  // namespace hri_face_body_matcher
