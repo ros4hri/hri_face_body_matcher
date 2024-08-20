@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.2 (2024-08-20)
+------------------
 * publish basic diagnostics
 * Contributors: Séverin Lemaignan
 
