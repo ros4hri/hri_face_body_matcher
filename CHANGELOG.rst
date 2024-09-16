@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.0.3 (2024-09-16)
+------------------
 * make pal_module_cmake an optional dependency
 * Contributors: Séverin Lemaignan
 
