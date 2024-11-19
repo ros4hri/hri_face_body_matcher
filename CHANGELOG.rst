@@ -2,6 +2,11 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
+Forthcoming
+-----------
+* re-license as Apache 2.0
+* Contributors: Séverin Lemaignan
+
 2.0.3 (2024-09-16)
 ------------------
 * make pal_module_cmake an optional dependency
