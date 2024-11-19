@@ -2,8 +2,8 @@
 Changelog for package hri_face_body_matcher
 ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
 
-Forthcoming
------------
+2.1.0 (2024-11-19)
+------------------
 * re-license as Apache 2.0
 * Contributors: Séverin Lemaignan
 
