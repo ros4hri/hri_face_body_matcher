@@ -4,7 +4,7 @@
   <version>2.0.3</version>
   <description>The hri_face_body_matcher package</description>
   <maintainer email="luka.juricic@pal-robotics.com">Luka Juricic</maintainer>
-  <license>PAL Robotics S.L.</license>
+  <license>Apache License 2.0</license>
 
   <buildtool_depend>ament_cmake_auto</buildtool_depend>
 
